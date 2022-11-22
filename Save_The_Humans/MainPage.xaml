@@ -54,5 +54,7 @@
             <Ellipse x:Name="portal" Height="50" Canvas.Left="457" Stroke="Black" Canvas.Top="350" Width="50" Fill="#FF17A1EA" PointerEntered="portal_PointerEntered"/>
         </Canvas>
         <TextBlock Grid.Column="1" TextWrapping="Wrap" VerticalAlignment="Center" Text="{StaticResource AppName}" HorizontalAlignment="Left" FontSize="56"/>
+        <TextBlock x:Name="scoreboard" Grid.Column="1" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="56" Margin="627,0,0,0" Text="Score: "/>
+        <TextBlock x:Name="scoreField" Grid.Column="1" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="56" Margin="795,0,0,0" Text=""/>
     </Grid>
 </Page>

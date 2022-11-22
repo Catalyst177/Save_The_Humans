@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Media.Animation;
+using System.Collections.Immutable;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -24,6 +25,7 @@ namespace Save_The_Humans
         DispatcherTimer enemyTimer = new DispatcherTimer();
         DispatcherTimer targetTimer = new DispatcherTimer();
         bool humanCaptured = false;
+        int score = 0;
         public MainPage()
         {
             this.InitializeComponent();
@@ -74,6 +76,8 @@ namespace Save_The_Humans
             playArea.Children.Add(human);
             enemyTimer.Start();
             targetTimer.Start();
+            score = 0;
+            updateScore();
         }
 
         private void AddEnemy()
@@ -129,7 +133,14 @@ namespace Save_The_Humans
                 Canvas.SetTop(human, random.Next(100, (int)playArea.ActualHeight - 100));
                 humanCaptured = false;
                 human.IsHitTestVisible = true;
+                score = score + 1;
+                updateScore();
             }
+        }
+
+        private void updateScore()
+        {
+            scoreField.Text = score.ToString();
         }
 
         private void playArea_PointerMoved(object sender, PointerRoutedEventArgs e)
