@@ -47,8 +47,8 @@
                 </LinearGradientBrush>
             </Canvas.Background>
             <StackPanel x:Name="human" Orientation="Vertical" PointerPressed="human_PointerPressed">
-                <Ellipse Fill="White" Height="10" Width="10"/>
-                <Rectangle Fill="White" Height="25" Width="10"/>
+                <Ellipse x:Name="head" Fill="White" Height="10" Width="10"/>
+                <Rectangle x:Name="body" Fill="White" Height="25" Width="10"/>
             </StackPanel>
             <TextBlock x:Name="gameOverText" Canvas.Left="723" TextWrapping="Wrap" Text="Game Over" Canvas.Top="350" FontFamily="Arial Black" FontSize="100" FontWeight="Bold" FontStyle="Italic"/>
             <Ellipse x:Name="portal" Height="50" Canvas.Left="457" Stroke="Black" Canvas.Top="350" Width="50" Fill="#FF17A1EA" PointerEntered="portal_PointerEntered"/>

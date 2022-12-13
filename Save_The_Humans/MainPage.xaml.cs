@@ -1,19 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 using Windows.UI.Xaml.Media.Animation;
-using System.Collections.Immutable;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -33,7 +25,7 @@ namespace Save_The_Humans
             enemyTimer.Interval = TimeSpan.FromSeconds(2);
 
             targetTimer.Tick += TargetTimer_Tick;
-            targetTimer.Interval = TimeSpan.FromSeconds(.1); 
+            targetTimer.Interval = TimeSpan.FromSeconds(.1);
         }
 
         private void TargetTimer_Tick(object sender, object e)
@@ -50,8 +42,10 @@ namespace Save_The_Humans
 
         private void EndTheGame()
         {
-            if(!playArea.Children.Contains(gameOverText))
+            if (!playArea.Children.Contains(gameOverText))
             {
+                head.StrokeThickness = 0;
+                body.StrokeThickness = 0;
                 enemyTimer.Stop();
                 targetTimer.Stop();
                 humanCaptured = false;
@@ -67,6 +61,7 @@ namespace Save_The_Humans
 
         private void StartGame()
         {
+            setRandomPosition();
             human.IsHitTestVisible = true;
             humanCaptured = false;
             progressBar.Value = 0;
@@ -78,6 +73,14 @@ namespace Save_The_Humans
             targetTimer.Start();
             score = 0;
             updateScore();
+        }
+
+        private void setRandomPosition()
+        {
+            Canvas.SetLeft(portal, random.Next(100, (int)playArea.ActualWidth - 100));
+            Canvas.SetTop(portal, random.Next(100, (int)playArea.ActualHeight - 100));
+            Canvas.SetLeft(human, random.Next(100, (int)playArea.ActualWidth - 100));
+            Canvas.SetTop(human, random.Next(100, (int)playArea.ActualHeight - 100));
         }
 
         private void AddEnemy()
@@ -105,7 +108,7 @@ namespace Save_The_Humans
             {
                 From = from,
                 To = to,
-                Duration = new Duration(TimeSpan.FromSeconds(random.Next(4,6)))
+                Duration = new Duration(TimeSpan.FromSeconds(random.Next(4, 6)))
             };
             Storyboard.SetTarget(animation, enemy);
             Storyboard.SetTargetProperty(animation, propertyToAnimate);
@@ -115,7 +118,12 @@ namespace Save_The_Humans
 
         private void human_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            if(enemyTimer.IsEnabled)
+            SolidColorBrush highlight = new SolidColorBrush(Colors.Blue);
+            head.Stroke = highlight;
+            head.StrokeThickness = 2;
+            body.Stroke = highlight;
+            body.StrokeThickness = 2;
+            if (enemyTimer.IsEnabled)
             {
                 humanCaptured = true;
                 human.IsHitTestVisible = false;
@@ -124,13 +132,12 @@ namespace Save_The_Humans
 
         private void portal_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
+            head.StrokeThickness = 0;
+            body.StrokeThickness = 0;
             if (targetTimer.IsEnabled && humanCaptured)
             {
                 progressBar.Value = 0;
-                Canvas.SetLeft(portal, random.Next(100, (int)playArea.ActualWidth - 100));
-                Canvas.SetTop(portal, random.Next(100, (int)playArea.ActualHeight - 100));
-                Canvas.SetLeft(human, random.Next(100, (int)playArea.ActualWidth - 100));
-                Canvas.SetTop(human, random.Next(100, (int)playArea.ActualHeight - 100));
+                setRandomPosition();
                 humanCaptured = false;
                 human.IsHitTestVisible = true;
                 score = score + 1;
@@ -145,17 +152,19 @@ namespace Save_The_Humans
 
         private void playArea_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
-            if(humanCaptured)
+            if (humanCaptured)
             {
                 Point pointerPosition = e.GetCurrentPoint(null).Position;
                 Point relativePosition = grid.TransformToVisual(playArea).TransformPoint(pointerPosition);
                 if ((Math.Abs(relativePosition.X - Canvas.GetLeft(human)) > human.ActualWidth * 3)
-                    || (Math.Abs(relativePosition.Y - Canvas.GetTop(human)) > human.ActualHeight * 3)) 
+                    || (Math.Abs(relativePosition.Y - Canvas.GetTop(human)) > human.ActualHeight * 3))
                 {
+                    head.StrokeThickness = 0;
+                    body.StrokeThickness = 0;
                     humanCaptured = false;
                     human.IsHitTestVisible = true;
                 }
-                else 
+                else
                 {
                     Canvas.SetLeft(human, relativePosition.X - human.ActualWidth / 2);
                     Canvas.SetTop(human, relativePosition.Y - human.ActualHeight / 2);
